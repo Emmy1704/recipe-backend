@@ -17,6 +17,7 @@ router.post('/register', controller.register);
 router.route('/:id/recipes')
    .get(controller.getRecipes)
    .patch(controller.updateRecipes)
+   
 module.exports = {
    usersRouter: router
 }

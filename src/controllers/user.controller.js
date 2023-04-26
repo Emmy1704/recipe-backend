@@ -1,8 +1,16 @@
 const {userModel} = require("../models/user.model");
+const validators = require("../validators/user.validator");
 const bcrypt = require("bcrypt")
+const {formatZodError} = require("../utilities/errormessage")
 
 //login
 async function login(req, res) {
+   const result = validators.loginValidator.safeParse(req.body);
+
+   if (!result.success) {
+      return res.status(400).json(formatZodError(result.error.issues)).end();
+   }
+
    const user = await userModel.findOne({username: req.body.username});
 
    if (!user) return res.send("user not found!!").end();
@@ -16,7 +24,11 @@ async function login(req, res) {
 
 //register
 async function register(req, res) {
-   em
+   const result = validators.registerValidator.safeParse(req.body)
+
+   if (!result.success) {
+      return res.status(400).json(formatZodError(result.error.issues)).end();
+   }
 
    await userModel.create ({
       name: req.body.name,
@@ -30,6 +42,12 @@ async function register(req, res) {
 
 // get recipes
 async function getRecipes(req, res) {
+   const result = validators.getRecipesValidator.safeParse(req.body);
+
+   if (!result.success) {
+      return res.status(400).json(formatZodError(result.error.issues)).end();
+   }
+
    const user = await userModel.findById(req.params.id);
 
    res.json(user.recipes).end();
@@ -37,7 +55,12 @@ async function getRecipes(req, res) {
 
 //updateRecipes
 async function updateRecipes(req, res) {
-   console.log(req.body.recipes, typeof req.body.recipes);
+   const result = validators.updateRecipesValidator.safeParse(req.body);
+
+   if (!result.success) {
+      return res.status(400).json(formatZodError(result.error.issues)).end();
+   }
+
    await userModel.updateOne({_id: req.params.id}, {
       $push: {
          recipes: {$each: req.body.recipes}
