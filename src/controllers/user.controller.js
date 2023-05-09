@@ -58,7 +58,7 @@ async function updateRecipes(req, res) {
    const result = validators.updateRecipesValidator.safeParse(req.body);
 
    if (!result.success) {
-      return res.status(400).json(formatZodError(result.error.issues)).end();
+      return res.status(400).json(result.error.issues).end();
    }
 
    await userModel.updateOne({_id: req.params.id}, {

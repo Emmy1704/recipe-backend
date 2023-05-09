@@ -10,6 +10,9 @@ const app = express();
 app.use(express.json()); // Helps our app to accept json data
 app.use('/recipes', recipesRouter);
 app.use('/users', usersRouter)
+app.get('/status', (req, res) => {
+   res.status(200).send("server is running")
+})
 
 
 mongoose.connect(mongoUrl).then(() => {
